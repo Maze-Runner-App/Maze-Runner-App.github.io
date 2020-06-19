@@ -247,7 +247,7 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 			const labels = [ 'ball', 'goal' ];
 
 			if (labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
-				console.log('YOU WON');
+				
 				winnerScreen.classList.remove('hidden');
 				timer.pause();
 				timer.startBtn.removeEventListener('click', timer.start);
@@ -262,7 +262,7 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 		});
 	});
 
-	Events.on(engine, "afterUpdate", (event) => {console.log(event)})
+	
 
 	Runner.run(runner, engine);
 	Render.run(render);
