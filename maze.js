@@ -1,35 +1,24 @@
-const createMaze = async (cellsHorizontal, cellsVertical) => {
+const createMaze = (cellsHorizontal, cellsVertical) => {
 	//set timer
-	const setTimer = () => {
-		return new Promise((resolve, reject) => {
-			const timer = new Timer(timerDisplay, startBtn, pauseBtn, {
-				onStart() {
-					if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
-						document.addEventListener('keydown', handleNav);
-						document.querySelector('.pauseScreen').classList.add('hidden');
-					}
-				},
-				onPause() {
-					if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
-						document.removeEventListener('keydown', handleNav);
-						document.querySelector('.pauseScreen').classList.remove('hidden');
-					}
-				},
-				onComplete() {
-					document.querySelector('.pauseScreen').classList.add('hidden');
-					gameOverScreen.classList.remove('hidden');
-				}
-			});
-			if (timer) {
-				resolve(timer);
-			} else {
-				reject(error);
+
+	const timer = new Timer(timerDisplay, startBtn, pauseBtn, {
+		onStart() {
+			if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
+				document.addEventListener('keydown', handleNav);
+				document.querySelector('.pauseScreen').classList.add('hidden');
 			}
-		});
-	};
-
-	const timer = await setTimer();
-
+		},
+		onPause() {
+			if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
+				document.removeEventListener('keydown', handleNav);
+				document.querySelector('.pauseScreen').classList.remove('hidden');
+			}
+		},
+		onComplete() {
+			document.querySelector('.pauseScreen').classList.add('hidden');
+			gameOverScreen.classList.remove('hidden');
+		}
+	});
 
 	const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 	const canvas = document.querySelector('div.canvas');
@@ -260,7 +249,7 @@ const createMaze = async (cellsHorizontal, cellsVertical) => {
 
 			if (labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
 				winnerScreen.classList.remove('hidden');
-			
+
 				timer.pause();
 				timer.startBtn.removeEventListener('click', timer.start);
 				world.gravity.y = 1;
