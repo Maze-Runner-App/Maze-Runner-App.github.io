@@ -1,5 +1,5 @@
 const createMaze = (cellsHorizontal, cellsVertical) => {
-	const { Engine, Render, Runner, World, Bodies, Body, Events, Svg, Vertices, Common, Composites } = Matter;
+	const { Engine, Render, Runner, World, Bodies, Body, Events} = Matter;
 	const canvas = document.querySelector('div.canvas');
 
 	const width = canvas.offsetWidth;
@@ -24,6 +24,28 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 
 	const runner = Runner.create();
 
+
+
+	//set timer
+	const timer = new Timer(timerDisplay, startBtn, pauseBtn, {
+		onStart() {
+			if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
+				document.addEventListener('keydown', handleNav);
+				document.querySelector('.pauseScreen').classList.add('hidden');
+			}
+		},
+		onPause() {
+			if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
+				document.removeEventListener('keydown', handleNav);
+				document.querySelector('.pauseScreen').classList.remove('hidden');
+			}
+		},
+		onComplete() {
+			document.querySelector('.pauseScreen').classList.add('hidden');
+			gameOverScreen.classList.remove('hidden');
+		}
+	});
+	
 	//Walls
 	const walls = [
 		Bodies.rectangle(width / 2, 0, width, 2, {
@@ -203,7 +225,7 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 
 	World.add(world, ball);
 
-	// timer creation and keydown events
+	//keydown events
 
 	const handleNav = (event) => {
 		const { x, y } = ball.velocity;
@@ -221,24 +243,6 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 		}
 	};
 
-	const timer = new Timer(timerDisplay, startBtn, pauseBtn, {
-		onStart() {
-			if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
-				document.addEventListener('keydown', handleNav);
-				document.querySelector('.pauseScreen').classList.add('hidden');
-			}
-		},
-		onPause() {
-			if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
-				document.removeEventListener('keydown', handleNav);
-				document.querySelector('.pauseScreen').classList.remove('hidden');
-			}
-		},
-		onComplete() {
-			document.querySelector('.pauseScreen').classList.add('hidden');
-			gameOverScreen.classList.remove('hidden');
-		}
-	});
 
 	// collision detection
 
