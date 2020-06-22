@@ -48,6 +48,6 @@ class Timer {
 	}
 
 	set timeRemaining(time) {
-		this.durationInput.innerText = time.toFixed(2);
+		this.durationInput.innerText = time;
 	}
 }
