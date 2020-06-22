@@ -1,5 +1,37 @@
-const createMaze = (cellsHorizontal, cellsVertical) => {
-	const { Engine, Render, Runner, World, Bodies, Body, Events} = Matter;
+const createMaze = async (cellsHorizontal, cellsVertical) => {
+	//set timer
+	const setTimer = () => {
+		return new Promise((resolve, reject) => {
+			const timer = new Timer(timerDisplay, startBtn, pauseBtn, {
+				onStart() {
+					if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
+						document.addEventListener('keydown', handleNav);
+						document.querySelector('.pauseScreen').classList.add('hidden');
+					}
+				},
+				onPause() {
+					if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
+						document.removeEventListener('keydown', handleNav);
+						document.querySelector('.pauseScreen').classList.remove('hidden');
+					}
+				},
+				onComplete() {
+					document.querySelector('.pauseScreen').classList.add('hidden');
+					gameOverScreen.classList.remove('hidden');
+				}
+			});
+			if (timer) {
+				resolve(timer);
+			} else {
+				reject(error);
+			}
+		});
+	};
+
+	const timer = await setTimer();
+
+
+	const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 	const canvas = document.querySelector('div.canvas');
 
 	const width = canvas.offsetWidth;
@@ -24,28 +56,6 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 
 	const runner = Runner.create();
 
-
-
-	//set timer
-	const timer = new Timer(timerDisplay, startBtn, pauseBtn, {
-		onStart() {
-			if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
-				document.addEventListener('keydown', handleNav);
-				document.querySelector('.pauseScreen').classList.add('hidden');
-			}
-		},
-		onPause() {
-			if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
-				document.removeEventListener('keydown', handleNav);
-				document.querySelector('.pauseScreen').classList.remove('hidden');
-			}
-		},
-		onComplete() {
-			document.querySelector('.pauseScreen').classList.add('hidden');
-			gameOverScreen.classList.remove('hidden');
-		}
-	});
-	
 	//Walls
 	const walls = [
 		Bodies.rectangle(width / 2, 0, width, 2, {
@@ -184,7 +194,6 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 	//drawing goal
 	const textureSizeGoal = 650;
 
-
 	const goal = Bodies.rectangle(
 		width - unitLengthX / 2,
 		height - unitLengthY / 2,
@@ -217,8 +226,8 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 			fillStyle: 'yellow',
 			sprite: {
 				texture: './assets/ghost2.png',
-					xScale: unitLengthX * 0.7 / textureSizeBall,
-					yScale: unitLengthY * 0.7 / textureSizeBall
+				xScale: unitLengthX * 0.7 / textureSizeBall,
+				yScale: unitLengthY * 0.7 / textureSizeBall
 			}
 		}
 	});
@@ -243,7 +252,6 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 		}
 	};
 
-
 	// collision detection
 
 	Events.on(engine, 'collisionStart', (event) => {
@@ -251,8 +259,8 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 			const labels = [ 'ball', 'goal' ];
 
 			if (labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
-				
 				winnerScreen.classList.remove('hidden');
+			
 				timer.pause();
 				timer.startBtn.removeEventListener('click', timer.start);
 				world.gravity.y = 1;
@@ -265,8 +273,6 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 			}
 		});
 	});
-
-	
 
 	Runner.run(runner, engine);
 	Render.run(render);
