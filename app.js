@@ -1,6 +1,6 @@
 const btn = document.querySelectorAll('.difficulty button');
 const scoreboard = document.querySelector('.scoreboard');
-const timerDisplay = document.querySelector('span');
+const timerDisplay = document.querySelector('span#timerDisplay');
 const startBtn = document.querySelector('button.start');
 const pauseBtn = document.querySelector('button.pause');
 const tryAgainBtn = document.querySelectorAll('.playAgain');

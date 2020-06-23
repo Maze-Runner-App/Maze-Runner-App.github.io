@@ -6,6 +6,7 @@ const createMaze = (cellsHorizontal, cellsVertical) => {
 			if (gameOverScreen.className.includes('hidden') && winnerScreen.className.includes('hidden')) {
 				document.addEventListener('keydown', handleNav);
 				document.querySelector('.pauseScreen').classList.add('hidden');
+				
 			}
 		},
 		onPause() {
